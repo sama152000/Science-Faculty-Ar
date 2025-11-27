@@ -1,0 +1,288 @@
+<section class="units-centers-section">
+  <div class="container-fluid">
+    <h2 class="section-title">الوحدات والمراكز بالكلية</h2>
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation card-custom mb-4">
+      <div class="tab-buttons">
+        <button
+          class="tab-btn"
+          [class.active]="isActiveTab('units')"
+          (click)="setActiveTab('units')">
+          الوحدات
+          <span class="badge">{{ units.length }}</span>
+        </button>
+        <button
+          class="tab-btn"
+          [class.active]="isActiveTab('centers')"
+          (click)="setActiveTab('centers')">
+          المراكز البحثية والخدمية
+          <span class="badge">{{ centers.length }}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-3 col-md-4 mb-4">
+        <div class="items-sidebar card-custom">
+          <h4 class="sidebar-title">
+            {{ activeTab === 'units' ? 'الوحدات الإدارية والخدمية' : 'المراكز العلمية والبحثية' }}
+          </h4>
+
+          <ul class="items-list">
+            <li *ngFor="let item of getCurrentItems()">
+              <button
+                class="item-btn"
+                [class.active]="isItemSelected(item.id)"
+                (click)="selectItem(item)">
+                <div class="item-icon">
+                  <i [class]="item.icon"></i>
+                </div>
+                <div class="item-info">
+                  <h6 class="item-name">{{ item.name }}</h6>
+                  <p class="item-desc">{{ item.description }}</p>
+                </div>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="col-lg-9 col-md-8">
+        <div class="item-content" *ngIf="selectedItem">
+
+          <!-- Item Header -->
+          <div class="item-header card-custom mb-4">
+            <div class="header-content">
+              <div class="item-icon-large">
+                <i [class]="selectedItem.icon"></i>
+              </div>
+              <div class="header-info">
+                <h1 class="item-title">{{ selectedItem.name }}</h1>
+                <p class="item-subtitle">{{ selectedItem.description }}</p>
+
+                <div class="item-stats" *ngIf="selectedItem.establishedYear">
+                  <div class="stat-item">
+                    <span>تأسست عام {{ selectedItem.establishedYear }}</span>
+                  </div>
+                  <div class="stat-item" *ngIf="selectedItem.director">
+                    <span>{{ selectedItem.director }}</span>
+                  </div>
+                  <div class="stat-item" *ngIf="selectedItem.location">
+                    <span>{{ selectedItem.location }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section Navigation -->
+          <div class="section-nav card-custom mb-4">
+            <div class="nav-buttons">
+              <button
+                class="nav-btn"
+                [class.active]="isActiveSection('overview')"
+                (click)="setActiveSection('overview')">
+                نظرة عامة
+              </button>
+              <button
+                class="nav-btn"
+                [class.active]="isActiveSection('objectives')"
+                (click)="setActiveSection('objectives')">
+                الأهداف
+              </button>
+              <button
+                class="nav-btn"
+                [class.active]="isActiveSection('services')"
+                (click)="setActiveSection('services')">
+                الخدمات المقدمة
+              </button>
+              <button
+                class="nav-btn"
+                [class.active]="isActiveSection('facilities')"
+                (click)="setActiveSection('facilities')">
+                التجهيزات والمرافق
+              </button>
+              <button
+                class="nav-btn"
+                [class.active]="isActiveSection('contact')"
+                (click)="setActiveSection('contact')">
+                بيانات التواصل
+              </button>
+            </div>
+          </div>
+
+          <!-- Section Content -->
+          <div class="section-content card-custom">
+
+            <!-- Overview Section -->
+            <div class="content-section" *ngIf="isActiveSection('overview')">
+              <div class="section-header">
+                <h3 class="section-title-right">
+                  نظرة عامة على {{ selectedItem.type === 'unit' ? 'الوحدة' : 'المركز' }}
+                </h3>
+              </div>
+
+              <div class="content-body">
+                <p class="lead">{{ selectedItem.overview }}</p>
+
+                <div class="row mt-4">
+                  <div class="col-md-6" *ngIf="selectedItem.director">
+                    <div class="info-card">
+                      <h5 class="text-primary-custom">
+                        مدير {{ selectedItem.type === 'unit' ? 'الوحدة' : 'المركز' }}
+                      </h5>
+                      <p class="h6">{{ selectedItem.director }}</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6" *ngIf="selectedItem.establishedYear">
+                    <div class="info-card">
+                      <h5 class="text-primary-custom">
+                        سنة التأسيس
+                      </h5>
+                      <p class="h6">{{ selectedItem.establishedYear }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Objectives Section -->
+            <div class="content-section" *ngIf="isActiveSection('objectives')">
+              <div class="section-header">
+                <h3 class="section-title-right">
+                  الأهداف الرئيسية
+                </h3>
+              </div>
+
+              <div class="content-body">
+                <div class="objectives-grid">
+                  <div class="objective-item" *ngFor="let objective of selectedItem.objectives; let i = index">
+                    <div class="objective-number">{{ i + 1 }}</div>
+                    <div class="objective-content">
+                      <p>{{ objective }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Services Section -->
+            <div class="content-section" *ngIf="isActiveSection('services')">
+              <div class="section-header">
+                <h3 class="section-title-right">
+                  الخدمات المقدمة
+                </h3>
+              </div>
+
+              <div class="content-body">
+                <div class="services-grid">
+                  <div class="service-item" *ngFor="let service of selectedItem.services">
+                    <div class="service-icon">
+                      <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h6 class="service-name">{{ service }}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Facilities Section -->
+            <div class="content-section" *ngIf="isActiveSection('facilities')">
+              <div class="section-header">
+                <h3 class="section-title-right">
+                  المرافق والتجهيزات
+                </h3>
+              </div>
+
+              <div class="content-body">
+                <div class="facilities-list">
+                  <div class="facility-item" *ngFor="let facility of selectedItem.facilities">
+                    <div class="facility-icon">
+                      <i class="fas fa-home"></i>
+                    </div>
+                    <div class="facility-content">
+                      <h6 class="facility-title">{{ facility }}</h6>
+                      <p class="facility-desc">مرافق حديثة في {{ facility }} مجهزة بأحدث التقنيات والموارد العلمية.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="content-section" *ngIf="isActiveSection('contact')">
+              <div class="section-header">
+                <h3 class="section-title-right">
+                  بيانات التواصل
+                </h3>
+              </div>
+
+              <div class="content-body">
+                <div class="row">
+                  <div class="col-md-6" *ngIf="selectedItem.contactEmail">
+                    <div class="contact-card">
+                      <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                      </div>
+                      <h5>البريد الإلكتروني</h5>
+                      <p>
+                        <a [href]="'mailto:' + selectedItem.contactEmail">
+                          {{ selectedItem.contactEmail }}
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-6" *ngIf="selectedItem.contactPhone">
+                    <div class="contact-card">
+                      <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                      </div>
+                      <h5>رقم الهاتف</h5>
+                      <p>
+                        <a [href]="'tel:' + selectedItem.contactPhone">
+                          {{ selectedItem.contactPhone }}
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-6" *ngIf="selectedItem.location">
+                    <div class="contact-card">
+                      <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                      </div>
+                      <h5>الموقع</h5>
+                      <p>{{ selectedItem.location }}</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6" *ngIf="selectedItem.website">
+                    <div class="contact-card">
+                      <div class="contact-icon">
+                        <i class="fas fa-globe"></i>
+                      </div>
+                      <h5>الموقع الإلكتروني</h5>
+                      <p>
+                        <a [href]="selectedItem.website" target="_blank">
+                          {{ selectedItem.website }}
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- No Item Selected -->
+        <div class="no-selection text-center py-5" *ngIf="!selectedItem">
+          <i [class]="activeTab === 'units' ? 'fas fa-building' : 'fas fa-university'" class="fa-3x text-muted mb-3"></i>
+          <h4>اختر {{ activeTab === 'units' ? 'وحدة' : 'مركزًا' }}</h4>
+          <p class="text-muted">يرجى اختيار {{ activeTab === 'units' ? 'إحدى الوحدات' : 'أحد المراكز' }} من القائمة الجانبية لعرض التفاصيل الكاملة.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

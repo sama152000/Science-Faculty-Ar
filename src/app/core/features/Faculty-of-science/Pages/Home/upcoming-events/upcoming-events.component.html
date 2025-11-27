@@ -1,0 +1,53 @@
+<section id="events" class="events-section"
+         style="background: linear-gradient(135deg, #acd2f1 0%, #e6d7ac 100%);">
+  <div class="container-fluid">
+    <h2 class="section-title text-dark-blue mb-5">الفعاليات والأنشطة القادمة</h2>
+
+    <!-- Timeline -->
+    <div class="timeline position-relative">
+      <!-- الخط الزمني الأساسي -->
+      <div class="timeline-line position-absolute"></div>
+
+      <!-- Events Grid -->
+      <div class="row justify-content-center">
+        <div class="col-lg-3 col-md-6 mb-5" *ngFor="let event of events; let i = index">
+          <div class="timeline-event text-center position-relative">
+
+            <!-- النقطة الزمنية -->
+            <div class="event-dot rounded-circle bg-primary-custom mx-auto mb-4 shadow-sm"></div>
+
+            <!-- التاريخ -->
+            <div class="event-date text-primary-custom fw-bold fs-5 mb-4">
+              {{ formatDate(event.date) }}
+            </div>
+
+            <!-- بطاقة الفعالية -->
+            <div class="event-card card-custom hover-lift shadow-sm h-100">
+              <img [src]="event.image"
+                   [alt]="event.title"
+                   class="card-img-top img-cover"
+                   style="height: 180px; object-fit: cover;">
+
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title text-dark-blue fw-bold mb-3">{{ event.title }}</h5>
+                <p class="card-text text-muted small flex-grow-1">{{ event.description }}</p>
+
+                <a routerLink="/" 
+                   class="read-more text-primary-custom fw-bold text-decoration-none mt-3 align-self-start">
+                  اقرأ المزيد <i class="fas fa-arrow-left ms-2"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- زر عرض جميع الفعاليات -->
+    <div class="text-center mt-5">
+      <a routerLink="/news" class="btn btn-primary-custom px-5 py-3 fw-bold">
+        عرض جميع الفعاليات والأخبار
+      </a>
+    </div>
+  </div>
+</section>

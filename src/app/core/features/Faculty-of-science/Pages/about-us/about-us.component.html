@@ -1,0 +1,219 @@
+<section class="about-section py-5">
+  <div class="container-fluid">
+
+    <!-- العنوان الرئيسي -->
+    <div class="row mb-5">
+      <div class="col-12 text-center">
+        <h1 class="section-title fw-bold">عن كلية العلوم</h1>
+        <p class="lead text-muted fs-4">جامعة الأقصر</p>
+      </div>
+    </div>
+
+    <!-- حاوية المحتوى مع التبويبات العمودية -->
+    <div class="about-container">
+
+      <!-- التبويبات الجانبية (Vertical Tabs) -->
+      <div class="about-tabs">
+        <button 
+          class="tab-link" 
+          [class.active]="isActiveTab('introduction')"
+          (click)="setActiveTab('introduction')">
+          <i class="fas fa-university me-2"></i>
+          مقدمة عن الكلية
+        </button>
+        
+        <button 
+          class="tab-link" 
+          [class.active]="isActiveTab('vision')"
+          (click)="setActiveTab('vision')">
+          <i class="fas fa-eye me-2"></i>
+          الرؤية
+        </button>
+        
+        <button 
+          class="tab-link" 
+          [class.active]="isActiveTab('mission')"
+          (click)="setActiveTab('mission')">
+          <i class="fas fa-flag me-2"></i>
+          الرسالة
+        </button>
+        
+        <button 
+          class="tab-link" 
+          [class.active]="isActiveTab('objectives')"
+          (click)="setActiveTab('objectives')">
+          <i class="fas fa-bullseye me-2"></i>
+          الأهداف
+        </button>
+        
+        <button 
+          class="tab-link" 
+          [class.active]="isActiveTab('history')"
+          (click)="setActiveTab('history')">
+          <i class="fas fa-history me-2"></i>
+          تاريخ الكلية
+        </button>
+        
+        <button 
+          class="tab-link" 
+          [class.active]="isActiveTab('dean')"
+          (click)="setActiveTab('dean')">
+          <i class="fas fa-user-tie me-2"></i>
+          كلمة العميد
+        </button>
+      </div>
+
+      <!-- منطقة المحتوى -->
+      <div class="tab-content">
+
+        <!-- 1. مقدمة عن الكلية -->
+        <div class="tab-panel" [class.active]="isActiveTab('introduction')" *ngIf="introduction">
+          <div class="content-header">
+            <h2 class="content-title">
+              <i class="fas fa-university text-primary-custom me-3"></i>
+              {{ introduction.title }}
+            </h2>
+          </div>
+          
+          <div class="content-body">
+            <p class="lead mb-4 text-justify">{{ introduction.description }}</p>
+            
+            <div class="row mt-5 g-4">
+              <div class="col-md-6">
+                <div class="info-card p-4 rounded shadow-sm">
+                  <h4 class="text-primary-custom mb-3">
+                    <i class="fas fa-calendar-alt me-2"></i> سنة التأسيس
+                  </h4>
+                  <p class="h4 fw-bold text-dark">{{ introduction.establishedYear }}</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-card p-4 rounded shadow-sm">
+                  <h4 class="text-primary-custom mb-3">
+                    <i class="fas fa-trophy me-2 "></i> أبرز الإنجازات
+                  </h4>
+                  <ul class="achievement-list list-unstyled">
+                    <li *ngFor="let achievement of introduction.achievements" class="mb-2">
+                      <i class="fas fa-check-circle text-success me-2 p-2"></i>
+                      {{ achievement }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. الرؤية -->
+        <div class="tab-panel" [class.active]="isActiveTab('vision')" *ngIf="vision">
+          <div class="content-header">
+            <h2 class="content-title">
+              <i class="fas fa-eye text-primary-custom me-3"></i> رؤيتنا
+            </h2>
+          </div>
+          <div class="content-body">
+            <div class="vision-card p-5 text-center">
+              <div class="vision-icon mb-4">
+                <i class="fas fa-lightbulb fa-3x text-warning"></i>
+              </div>
+              <p class="vision-text fs-4 fw-medium text-dark lh-lg">{{ vision.vision }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. الرسالة -->
+        <div class="tab-panel" [class.active]="isActiveTab('mission')" *ngIf="mission">
+          <div class="content-header">
+            <h2 class="content-title">
+              <i class="fas fa-flag text-primary-custom me-3"></i> رسالتنا
+            </h2>
+          </div>
+          <div class="content-body">
+            <div class="mission-card p-5 text-center">
+              <div class="mission-icon mb-4">
+                <i class="fas fa-rocket fa-3x text-primary"></i>
+              </div>
+              <p class="mission-text fs-4 fw-medium text-dark lh-lg">{{ mission.mission }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. الأهداف -->
+        <div class="tab-panel" [class.active]="isActiveTab('objectives')" *ngIf="objectives">
+          <div class="content-header">
+            <h2 class="content-title">
+              <i class="fas fa-bullseye text-primary-custom me-3"></i> أهدافنا الاستراتيجية
+            </h2>
+          </div>
+          <div class="content-body">
+            <div class="objectives-grid">
+              <div class="objective-item " *ngFor="let objective of objectives.objectives; let i = index">
+                <!-- <div class="objective-number ">{{ i + 1 }}</div> -->
+                <div class="objective-content">
+                  <p class="mb-0">{{ objective }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. تاريخ الكلية -->
+        <div class="tab-panel" [class.active]="isActiveTab('history')" *ngIf="history">
+          <div class="content-header">
+            <h2 class="content-title">
+              <i class="fas fa-history text-primary-custom me-3"></i> تاريخ الكلية
+            </h2>
+          </div>
+          <div class="content-body">
+            <div class="history-content p-4">
+              <p class="text-justify fs-5 lh-lg text-dark">{{ history.history }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. كلمة العميد -->
+        <div class="tab-panel" [class.active]="isActiveTab('dean')" *ngIf="deanMessage">
+          <div class="content-header">
+            <h2 class="content-title">
+              <i class="fas fa-user-tie text-primary-custom me-3"></i> كلمة الأستاذ الدكتور العميد
+            </h2>
+          </div>
+          
+          <div class="content-body">
+            <div class="dean-message-container p-4 p-md-5">
+              <div class="row align-items-center g-5">
+                <div class="col-md-4 text-center">
+                  <div class="dean-image-wrapper">
+                    <img 
+                      [src]="deanMessage.deanImage" 
+                      [alt]="deanMessage.deanName"
+                      class="dean-image rounded shadow">
+                  </div>
+                  <div class="dean-info mt-4">
+                    <h4 class="dean-name fw-bold">{{ deanMessage.deanName }}</h4>
+                    <p class="dean-title text-muted fw-medium">{{ deanMessage.deanTitle }}</p>
+                  </div>
+                </div>
+                
+                <div class="col-md-8">
+                  <div class="dean-message position-relative p-4 bg-light rounded shadow-sm">
+                    <div class="quote-icon start-0 top-0 text-primary-custom opacity-25">
+                      <i class="fas fa-quote-left fa-3x"></i>
+                    </div>
+                    <p class="message-text fs-5 lh-lg text-dark text-justify position-relative z-1">
+                      {{ deanMessage.messageFromDean }}
+                    </p>
+                    <div class="quote-icon end-0 bottom-0 text-primary-custom opacity-25 rotate-180">
+                      <i class="fas fa-quote-right fa-3x"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

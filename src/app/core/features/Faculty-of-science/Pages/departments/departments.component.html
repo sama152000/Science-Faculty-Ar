@@ -1,0 +1,213 @@
+<section class="departments-section py-5">
+  <div class="container-fluid">
+
+    <!-- العنوان الرئيسي -->
+    <div class="text-center mb-5">
+      <h2 class="section-title fw-bold">الأقسام العلمية</h2>
+      <p class="lead text-muted fs-4">كلية العلوم – جامعة الأقصر</p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- الشريط الجانبي للأقسام -->
+      <div class="col-lg-3 col-md-4">
+        <div class="departments-sidebar card-custom shadow-sm h-100">
+
+          <h4 class="sidebar-title text-primary-custom mb-4">
+            <i class="fas fa-flask fa-beat me-3"></i>
+            الأقسام العلمية
+          </h4>
+
+          <ul class="departments-list list-unstyled">
+            <li *ngFor="let dept of departments">
+              <button
+                class="department-btn w-100 text-start mb-3 p-3 rounded-3 shadow-sm"
+                [class.active]="isDepartmentSelected(dept.id)"
+                [routerLink]="['/departments', dept.id]"
+                (click)="selectDepartment(dept)">
+                <div class="d-flex align-items-center">
+                  <div class="dept-icon bg-primary-custom text-white rounded-circle p-3 me-3">
+                    <i [class]="dept.icon" class="fa-lg"></i>
+                  </div>
+                  <div class="dept-info">
+                    <h6 class="dept-name mb-1 fw-bold">{{ dept.name }}</h6>
+                  <p class="dept-desc">{{ dept.description }}</p>
+                  </div>
+                </div>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- محتوى القسم المختار -->
+      <div class="col-lg-9 col-md-8">
+
+        <!-- عند اختيار قسم -->
+        <div *ngIf="selectedDepartment" class="department-content">
+
+          <!-- رأس القسم -->
+          <div class="department-header card-custom mb-4 p-4 shadow-sm">
+            <div class="d-flex align-items-center">
+              <div class="dept-icon-large bg-primary-custom text-white rounded-circle p-4 me-4">
+                <i [class]="selectedDepartment.icon" class="fa-3x"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h1 class="department-title mb-2">{{ selectedDepartment.name }}</h1>
+                <p class="department-subtitle text-muted fs-5 mb-3">{{ selectedDepartment.description }}</p>
+
+                <div class="department-stats d-flex flex-wrap gap-4">
+                  <div class="stat-item" *ngIf="selectedDepartment.establishedYear">
+                    <i class="fas fa-calendar-alt text-primary-custom me-2"></i>
+                    <strong>تأسس عام:</strong> {{ selectedDepartment.establishedYear }}
+                  </div>
+                  <div class="stat-item" *ngIf="selectedDepartment.studentCount">
+                    <i class="fas fa-users text-success me-2"></i>
+                    <strong>{{ selectedDepartment.studentCount }} طالب وطالبة</strong>
+                  </div>
+                  <div class="stat-item" *ngIf="selectedDepartment.facultyCount">
+                    <i class="fas fa-chalkboard-teacher text-info me-2"></i>
+                    <strong>{{ selectedDepartment.facultyCount }} عضو هيئة تدريس</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- أزرار التنقل داخل القسم -->
+          <div class="section-nav card-custom mb-4 p-3 shadow-sm">
+            <div class="d-flex flex-wrap gap-2">
+              <button class="nav-btn" [class.active]="isActiveSection('overview')" (click)="setActiveSection('overview')">
+                نظرة عامة
+              </button>
+              <button class="nav-btn" [class.active]="isActiveSection('vision')" (click)="setActiveSection('vision')">
+                الرؤية والرسالة
+              </button>
+              <button class="nav-btn" [class.active]="isActiveSection('objectives')" (click)="setActiveSection('objectives')">
+                الأهداف
+              </button>
+              <button class="nav-btn" [class.active]="isActiveSection('courses')" (click)="setActiveSection('courses')">
+                المقررات الدراسية
+              </button>
+              <button class="nav-btn" [class.active]="isActiveSection('research')" (click)="setActiveSection('research')">
+                البحث العلمي
+              </button>
+            </div>
+          </div>
+
+          <!-- المحتوى المتغير -->
+          <div class="section-content card-custom shadow-sm">
+
+            <!-- 1. نظرة عامة -->
+            <div *ngIf="isActiveSection('overview')" class="content-section p-4">
+              <h3 class="section-title-right mb-4">
+                نظرة عامة على القسم
+              </h3>
+              <p class="lead text-justify lh-lg">{{ selectedDepartment.overview }}</p>
+
+              <div class="row g-4 mt-4">
+                <div class="col-md-6" *ngIf="selectedDepartment.headOfDepartment">
+                  <div class="info-card p-4 text-center shadow-sm">
+                    <i class="fas fa-user-tie fa-3x text-primary-custom mb-3"></i>
+                    <h5>رئيس القسم</h5>
+                    <p class="fw-bold fs-5">{{ selectedDepartment.headOfDepartment }}</p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-card p-4 text-center shadow-sm">
+                    <i class="fas fa-calendar-check fa-3x text-success mb-3"></i>
+                    <h5>سنة التأسيس</h5>
+                    <p class="fw-bold fs-5">{{ selectedDepartment.establishedYear }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. الرؤية والرسالة -->
+            <div *ngIf="isActiveSection('vision')" class="content-section p-4">
+              <h3 class="section-title-right mb-4">
+                الرؤية والرسالة
+              </h3>
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="vision-card p-4 text-center shadow-sm h-100">
+                    <i class="fas fa-lightbulb fa-3x text-warning mb-3"></i>
+                    <h4 class="fw-bold">الرؤية</h4>
+                    <p class="lh-lg">{{ selectedDepartment.vision }}</p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mission-card p-4 text-center shadow-sm h-100">
+                    <i class="fas fa-rocket fa-3x text-primary mb-3"></i>
+                    <h4 class="fw-bold">الرسالة</h4>
+                    <p class="lh-lg">{{ selectedDepartment.mission }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. الأهداف -->
+            <div *ngIf="isActiveSection('objectives')" class="content-section p-4">
+              <h3 class="section-title-right mb-4">
+                الأهداف الاستراتيجية للقسم
+              </h3>
+              <div class="objectives-grid">
+                <div class="objective-item" *ngFor="let obj of selectedDepartment.objectives; let i = index">
+                  <div class="objective-number bg-primary-custom text-white">{{ i + 1 }}</div>
+                  <div class="objective-content p-3">
+                    <p class="mb-0">{{ obj }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. المقررات الدراسية -->
+            <div *ngIf="isActiveSection('courses')" class="content-section p-4">
+              <h3 class="section-title-right mb-4">
+                المقررات الدراسية المقدمة
+              </h3>
+              <div class="courses-grid row g-3">
+                <div class="col-lg-4 col-md-6" *ngFor="let course of selectedDepartment.courses">
+                  <div class="course-item text-center p-4 shadow-sm rounded h-100 hover-lift">
+                    <i class="fas fa-book-open fa-2x text-primary-custom mb-3"></i>
+                    <h6 class="fw-bold">{{ course }}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. البحث العلمي -->
+            <div *ngIf="isActiveSection('research')" class="content-section p-4">
+              <h3 class="section-title-right mb-4">
+                مجالات البحث العلمي
+              </h3>
+              <div class="research-areas">
+                <div class="research-item mb-4 p-4 rounded shadow-sm" *ngFor="let area of selectedDepartment.researchAreas">
+                  <div class="d-flex">
+                    <div class="research-icon bg-info text-white rounded-circle p-3 me-3 flex-shrink-0">
+                      <i class="fas fa-microscope"></i>
+                    </div>
+                    <div>
+                      <h5 class="fw-bold mb-2">{{ area }}</h5>
+<p class="research-desc">
+  بحوث متقدمة وتطوير في مجال {{ area }} مع التركيز على الابتكار والتطبيقات العملية وخدمة المجتمع والبيئة.
+</p>                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- عندما لا يتم اختيار قسم -->
+        <div *ngIf="!selectedDepartment" class="no-selection text-center py-5 my-5">
+          <i class="fas fa-university fa-5x text-muted mb-4 opacity-25"></i>
+          <h3 class="text-muted">اختر قسمًا علميًا</h3>
+          <p class="text-muted fs-5">اختر أحد الأقسام من القائمة الجانبية لعرض التفاصيل الكاملة</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

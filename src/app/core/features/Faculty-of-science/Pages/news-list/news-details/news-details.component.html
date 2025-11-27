@@ -1,0 +1,189 @@
+<section class="news-details-section py-5">
+  <div class="container-fluid">
+
+    <!-- حالة التحميل -->
+    <div class="loading-container text-center py-5" *ngIf="loading">
+      <div class="spinner-border text-primary-custom" style="width: 4rem; height: 4rem;" role="status">
+        <span class="visually-hidden">جاري التحميل...</span>
+      </div>
+      <p class="mt-4 fs-4 text-muted">جاري تحميل المحتوى، الرجاء الانتظار...</p>
+    </div>
+
+    <!-- حالة الخطأ -->
+    <div class="error-container text-center py-5" *ngIf="error && !loading">
+      <i class="fas fa-exclamation-triangle fa-5x text-warning mb-4"></i>
+      <h2 class="mb-3">المحتوى غير موجود</h2>
+      <p class="text-muted fs-5 mb-4">عذرًا، المقال أو الخبر الذي تبحث عنه غير موجود أو تم حذفه.</p>
+      <button class="btn btn-primary-custom px-5 py-3" (click)="goBack()">
+        العودة إلى الأخبار والمقالات
+      </button>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="row g-5" *ngIf="newsItem && !loading && !error">
+
+      <!-- المقال الرئيسي -->
+      <div class="col-lg-8">
+
+        <article class="news-article card-custom shadow-lg rounded-4 overflow-hidden">
+
+          <!-- رأس المقال -->
+          <div class="article-header p-5 bg-gradient-primary text-white">
+            <div class="article-meta d-flex flex-wrap gap-3 mb-4 small">
+              <span class="article-type-badge px-3 py-2 rounded-pill"
+                    [ngClass]="{'bg-success': newsItem.type === 'news', 'bg-info': newsItem.type === 'article'}">
+                {{ newsItem.type === 'news' ? 'خبر' : 'مقال علمي' }}
+              </span>
+              <span class="article-date">
+                <i class="fas fa-calendar-alt me-2"></i>
+                {{ formatDate(newsItem.date) }}
+              </span>
+              <span class="article-author" *ngIf="newsItem.author">
+                <i class="fas fa-user-tie me-2"></i>
+                {{ newsItem.author }}
+              </span>
+            </div>
+
+            <h1 class="article-title display-5 fw-bold mb-4">{{ newsItem.title }}</h1>
+
+            <!-- الوسوم -->
+            <div class="article-tags" *ngIf="newsItem.tags && newsItem.tags.length > 0">
+              <span class="tag bg-white text-primary-custom px-3 py-2 rounded-pill me-2"
+                    *ngFor="let tag of newsItem.tags">
+                #{{ tag }}
+              </span>
+            </div>
+          </div>
+
+          <!-- صورة المقال -->
+          <div class="article-image-container" *ngIf="newsItem.image">
+            <img [src]="newsItem.image" [alt]="newsItem.title" class="article-image w-100">
+          </div>
+
+          <!-- محتوى المقال -->
+          <div class="article-content p-5">
+
+            <!-- المقدمة -->
+            <div class="article-excerpt mb-5" *ngIf="newsItem.excerpt">
+              <p class="lead fs-4 text-muted lh-lg border-start border-primary-custom border-5 ps-4">
+                {{ newsItem.excerpt }}
+              </p>
+            </div>
+
+            <!-- النص الكامل -->
+ <div class="article-body">
+              <p>{{ newsItem.content }}</p>
+            </div>          </div>
+
+          <!-- تذييل المقال (مشاركة) -->
+          <div class="article-footer p-5 bg-light border-top">
+            <div class="share-buttons">
+              <h5 class="fw-bold mb-3">شارك هذا {{ newsItem.type === 'news' ? 'الخبر' : 'المقال' }}:</h5>
+              <div class="social-share d-flex gap-3">
+                <button class="share-btn facebook rounded-circle" (click)="shareOnSocial('facebook')"
+                        title="مشاركة على فيسبوك">
+                  <i class="fab fa-facebook-f"></i>
+                </button>
+                <button class="share-btn twitter rounded-circle" (click)="shareOnSocial('twitter')"
+                        title="مشاركة على تويتر">
+                  <i class="fab fa-twitter"></i>
+                </button>
+                <button class="share-btn linkedin rounded-circle" (click)="shareOnSocial('linkedin')"
+                        title="مشاركة على لينكد إن">
+                  <i class="fab fa-linkedin-in"></i>
+                </button>
+                <button class="share-btn whatsapp rounded-circle" (click)="shareOnSocial('whatsapp')"
+                        title="مشاركة على واتساب">
+                  <i class="fab fa-whatsapp"></i>
+                </button>
+              
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- الشريط الجانبي -->
+      <div class="col-lg-4">
+
+        <aside class="news-sidebar sticky-top" style="top: 100px;">
+
+          <!-- أزرار التنقل -->
+          <div class="sidebar-section card-custom shadow-sm mb-4 p-4">
+            <h5 class="sidebar-title fw-bold text-primary-custom mb-3">
+              التنقل
+            </h5>
+            <div class="d-grid gap-3">
+              <button class="btn btn-outline-primary-custom fw-bold" (click)="goBack()">
+                العودة للأخبار والمقالات
+              </button>
+              <button class="btn btn-outline-secondary fw-bold" (click)="goBackToType()">
+                العودة إلى {{ newsItem.type === 'news' ? 'الأخبار' : 'المقالات العلمية' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- المحتوى ذو الصلة -->
+          <div class="sidebar-section card-custom shadow-sm p-4 mb-4" *ngIf="relatedItems.length > 0">
+            <h5 class="sidebar-title fw-bold text-primary-custom mb-4">
+              {{ newsItem.type === 'news' ? 'أخبار ذات صلة' : 'مقالات مشابهة' }}
+            </h5>
+            <div class="related-items">
+              <div class="related-item d-flex mb-4 p-3 rounded hover-lift shadow-sm"
+                   *ngFor="let item of relatedItems">
+                <div class="related-image flex-shrink-0 me-3">
+                  <img [src]="item.image || 'assets/images/default-news.jpg'"
+                       [alt]="item.title" class="img-cover rounded">
+                  <div class="related-type-badge small"
+                       [ngClass]="{'bg-success': item.type === 'news', 'bg-info': item.type === 'article'}">
+                    {{ item.type === 'news' ? 'خبر' : 'مقال' }}
+                  </div>
+                </div>
+                <div class="related-content">
+                  <h6 class="related-title mb-2">
+                    <a [routerLink]="['/news', item.id]" class="text-decoration-none hover-primary">
+                      {{ item.title }}
+                    </a>
+                  </h6>
+                  <small class="text-muted d-block mb-1">
+                    {{ formatDate(item.date) }}
+                  </small>
+                  <p class="small text-muted mb-0">
+                    {{ item.excerpt | slice:0:70 }}...
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- معلومات المقال -->
+          <div class="sidebar-section card-custom shadow-sm p-4">
+            <h5 class="sidebar-title fw-bold text-primary-custom mb-4">
+              معلومات {{ newsItem.type === 'news' ? 'الخبر' : 'المقال' }}
+            </h5>
+            <div class="article-info">
+              <div class="info-item d-flex justify-content-between py-2 border-bottom">
+                <strong>النوع:</strong>
+                <span class="text-primary-custom">{{ newsItem.type === 'news' ? 'خبر' : 'مقال علمي' }}</span>
+              </div>
+              <div class="info-item d-flex justify-content-between py-2 border-bottom" *ngIf="newsItem.category">
+                <strong>التصنيف:</strong>
+                <span>{{ newsItem.category }}</span>
+              </div>
+              <div class="info-item d-flex justify-content-between py-2 border-bottom" *ngIf="newsItem.author">
+                <strong>الكاتب:</strong>
+                <span>{{ newsItem.author }}</span>
+              </div>
+              <div class="info-item d-flex justify-content-between py-2">
+                <strong>تاريخ النشر:</strong>
+                <span>{{ formatDate(newsItem.date) }}</span>
+              </div>
+            </div>
+          </div>
+
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>

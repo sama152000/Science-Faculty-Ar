@@ -1,0 +1,163 @@
+<section class="blog-grid-section py-5" dir="rtl">
+  <div class="container-fluid px-4 px-lg-5 px-xl-8">
+
+    <!-- العنوان الرئيسي -->
+    <div class="text-center mb-5">
+      <h2 class="section-title fw-bold display-5">الأخبار والمقالات العلمية</h2>
+      <p class="lead text-muted fs-4">آخر المستجدات والإصدارات من كلية العلوم - جامعة الأقصر</p>
+    </div>
+
+    <div class="row g-5">
+
+      <!-- الشريط الجانبي (التصنيفات) -->
+      <div class="col-lg-4">
+        <div class="category-sidebar card-custom shadow-sm p-4 ;">
+          <h4 class="sidebar-title text-primary-custom mb-4">
+            <i class="fas fa-filter me-3"></i>
+            التصنيفات
+          </h4>
+
+          <ul class="category-list list-unstyled">
+            <li class="mb-2">
+              <button class="category-btn w-100 text-start"
+                      [class.active]="selectedType === 'all'"
+                      (click)="onTypeChange('all')">
+                <i class="fas fa-th-large me-3"></i>
+                جميع المحتويات
+                <span class="count float-start">{{ allNews.length }}</span>
+              </button>
+            </li>
+
+            <li class="mb-2">
+              <button class="category-btn w-100 text-start"
+                      [class.active]="selectedType === 'news'"
+                      (click)="onTypeChange('news')">
+                <i class="fas fa-newspaper me-3"></i>
+                الأخبار
+                <span class="count float-start">{{ newsService.getByType('news').length }}</span>
+              </button>
+            </li>
+
+            <li class="mb-2">
+              <button class="category-btn w-100 text-start"
+                      [class.active]="selectedType === 'article'"
+                      (click)="onTypeChange('article')">
+                <i class="fas fa-file-alt me-3"></i>
+                المقالات العلمية
+                <span class="count float-start">{{ newsService.getByType('article').length }}</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- المحتوى الرئيسي -->
+      <div class="col-lg-8">
+
+        <!-- رأس النتائج -->
+        <div class="results-header mb-4 p-4 bg-light rounded shadow-sm">
+          <h3 class="results-title mb-1 fw-bold">
+            <span *ngIf="selectedType === 'all'">جميع الأخبار والمقالات</span>
+            <span *ngIf="selectedType === 'news'">آخر الأخبار</span>
+            <span *ngIf="selectedType === 'article'">المقالات العلمية والأكاديمية</span>
+          </h3>
+          <p class="results-count text-muted mb-0">
+            يتم عرض {{ filteredNews.length }} عنصر من إجمالي {{ allNews.length }}
+          </p>
+        </div>
+
+        <!-- شبكة الأخبار (بإستخدام Bootstrap Grid فقط) -->
+        <div class="row g-4" *ngIf="getPaginatedNews().length > 0">
+          <div class="col-lg-6 col-md-6 col-12" *ngFor="let item of getPaginatedNews()">
+            <article class="blog-card h-100 d-flex flex-column shadow-sm rounded overflow-hidden hover-lift transition-all">
+
+              <div class="blog-image-container position-relative">
+                <img [src]="item.image" [alt]="item.title" class="blog-img w-100">
+                <div class="blog-type-badge"
+                     [ngClass]="{'news-badge': item.type === 'news', 'article-badge': item.type === 'article'}">
+                  <i class="fas"
+                     [class.fa-newspaper]="item.type === 'news'"
+                     [class.fa-file-alt]="item.type === 'article'"></i>
+                  {{ item.type === 'news' ? 'خبر' : 'مقال' }}
+                </div>
+              </div>
+
+              <div class="blog-content p-4 d-flex flex-column flex-grow-1">
+
+                <div class="blog-meta text-muted small mb-3">
+                  <span class="blog-date me-3">
+                    <i class="fas fa-calendar-alt me-1"></i>
+                    {{ formatDate(item.date) }}
+                  </span>
+                  <span class="blog-author" *ngIf="item.author">
+                    <i class="fas fa-user me-1"></i>
+                    {{ item.author }}
+                  </span>
+                </div>
+
+                <h3 class="blog-title fs-5 fw-bold mb-3 flex-grow-1">
+                  <a [routerLink]="['/news', item.id]" class="text-decoration-none text-dark-blue hover-primary">
+                    {{ item.title }}
+                  </a>
+                </h3>
+
+                <p class="blog-excerpt text-muted lh-lg mb-4">
+                  {{ item.excerpt }}
+                </p>
+
+                <div class="blog-tags mb-3" *ngIf="item.tags && item.tags.length > 0">
+                  <span class="tag me-2" *ngFor="let tag of item.tags.slice(0, 3)">
+                    #{{ tag }}
+                  </span>
+                </div>
+
+                <div class="blog-footer mt-auto">
+                  <a [routerLink]="['/news', item.id]"
+                     class="read-more btn-outline-custom fw-bold d-inline-flex align-items-center">
+                    اقرأ المزيد
+                    <i class="fas fa-arrow-left ms-2"></i>
+                  </a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- لا توجد نتائج -->
+        <div class="no-results text-center py-5 my-5" *ngIf="getPaginatedNews().length === 0">
+          <i class="fas fa-newspaper fa-5x text-muted mb-4 opacity-25"></i>
+          <h4 class="text-muted">لا توجد عناصر حاليًا</h4>
+          <p class="text-muted fs-5">جاري إعداد المحتوى... تابعينا قريبًا!</p>
+        </div>
+
+        <!-- الترقيم الصفحات -->
+        <div class="pagination-wrapper mt-5" *ngIf="totalPages > 1">
+          <nav aria-label="ترقيم الصفحات">
+            <ul class="pagination justify-content-center">
+
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <button class="page-link" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">
+                  <i class="fas fa-chevron-right"></i> السابق
+                </button>
+              </li>
+
+              <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+                <button class="page-link" (click)="onPageChange(page)">
+                  {{ page }}
+                </button>
+              </li>
+
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <button class="page-link" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">
+                  التالي <i class="fas fa-chevron-left"></i>
+                </button>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
